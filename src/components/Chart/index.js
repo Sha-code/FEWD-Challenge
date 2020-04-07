@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import {
-  ScatterChart, Scatter, ZAxis, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  ScatterChart, ReferenceLine, Scatter, ZAxis, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 import './chart.css';
 import btc from 'src/data/btc.json';
@@ -11,20 +11,21 @@ import xrp from 'src/data/xrp.json';
 
 
 const Chart = () => {
-  const [currencyTag, setCurrencyTag] = useState(eth);
-  const [currencyName, setCurrencyName] = useState('Ethereum');
-  const [averageScore, setAverageScore] = useState(0);
-  const [size, setSize] = useState(window.innerWidth);
-
   const calculScore = (datas) => {
-    let score = 0;
-    datas.map((data) => {
-      score += data.score;
-    });
+    const score = datas.reduce((accumulator, data) => accumulator + data.score, 0);
     return (score / datas.length);
   };
 
   const btcAverageScore = calculScore(btc);
+  const ethAverageScore = calculScore(eth);
+  const ltcAverageScore = calculScore(ltc);
+  const xrpAverageScore = calculScore(xrp);
+
+  const [currencyTag, setCurrencyTag] = useState(eth);
+  const [currencyName, setCurrencyName] = useState('Ethereum');
+  const [averageScore, setAverageScore] = useState(ethAverageScore);
+  const [size, setSize] = useState(window.innerWidth);
+
 
   const selectedCurrency = (e) => {
     const currency = e.target.value.split('-');
@@ -33,21 +34,19 @@ const Chart = () => {
     switch (tag) {
       case 'eth':
         setCurrencyTag(eth);
-        setAverageScore(calculScore(eth));
+        setAverageScore(ethAverageScore);
         break;
       case 'ltc':
         setCurrencyTag(ltc);
-        setAverageScore(calculScore(ltc));
-
+        setAverageScore(ltcAverageScore);
         break;
       case 'xrp':
         setCurrencyTag(xrp);
-        setAverageScore(calculScore(xrp));
-
+        setAverageScore(xrpAverageScore);
         break;
       default:
         setCurrencyTag(eth);
-        setAverageScore(calculScore(eth));
+        setAverageScore(ethAverageScore);
     }
   };
 
@@ -82,6 +81,8 @@ const Chart = () => {
         <YAxis yAxisId="left" type="number" dataKey="price" name="Price" unit="USD" stroke="#8884d8" />
         <YAxis yAxisId="right" type="number" dataKey="price" name="Price" unit="USD" orientation="right" stroke="#82ca9d" />
         <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+        <ReferenceLine yAxisId="left" x={btcAverageScore} stroke="#8884d8" strokeDasharray="3 3" />
+        <ReferenceLine yAxisId="left" x={averageScore} stroke="#82ca9d" strokeDasharray="3 3" />
         <Scatter yAxisId="left" name="Bitcoin" data={btc} fill="#8884d8" />
         <Scatter yAxisId="right" name={currencyName} data={currencyTag} fill="#82ca9d" />
         <Legend />
