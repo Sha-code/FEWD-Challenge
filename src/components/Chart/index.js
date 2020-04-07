@@ -1,7 +1,7 @@
 import React, { PureComponent, useState, useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import {
-  ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  ScatterChart, Scatter, ZAxis, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 import './chart.css';
 import btc from 'src/data/btc.json';
@@ -41,6 +41,7 @@ const Chart = () => {
       <ScatterChart width={1200} height={600} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
         <XAxis type="number" dataKey="score" name="Google trend score" unit="" />
         <CartesianGrid />
+        <ZAxis type="number" dataKey="ratio" name="Low/Hight Ratio" range={[60, 300]} unit="" />
         <YAxis yAxisId="left" type="number" dataKey="price" name="Price" unit="USD" stroke="#8884d8" />
         <YAxis yAxisId="right" type="number" dataKey="price" name="Price" unit="USD" orientation="right" stroke="#82ca9d" />
         <Tooltip cursor={{ strokeDasharray: '3 3' }} />
@@ -48,7 +49,7 @@ const Chart = () => {
         <Scatter yAxisId="right" name={currencyName} data={currencyTag} fill="#82ca9d" />
         <Legend />
       </ScatterChart>
-      <select onChange={selectedCurrency} label="currency">
+      <select className="customSelect" onChange={selectedCurrency} label="currency">
         <option value="eth-Ethereum">Ethereum</option>
         <option value="ltc-Litecoin">Litecoin</option>
         <option value="xrp-Ripple">Ripple</option>

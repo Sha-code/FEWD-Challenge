@@ -4,3 +4,9 @@
   height: auto;
   bottom: 3em;
 }
+.customSelect {
+  border: 1px solid #8884d8;
+  background-color: #82ca9c;
+  height: 3em;
+  width: 8em;
+}
