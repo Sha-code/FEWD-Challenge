@@ -13,7 +13,18 @@ import xrp from 'src/data/xrp.json';
 const Chart = () => {
   const [currencyTag, setCurrencyTag] = useState(eth);
   const [currencyName, setCurrencyName] = useState('Ethereum');
+  const [averageScore, setAverageScore] = useState(0);
   const [size, setSize] = useState(window.innerWidth);
+
+  const calculScore = (datas) => {
+    let score = 0;
+    datas.map((data) => {
+      score += data.score;
+    });
+    return (score / datas.length);
+  };
+
+  const btcAverageScore = calculScore(btc);
 
   const selectedCurrency = (e) => {
     const currency = e.target.value.split('-');
@@ -22,17 +33,24 @@ const Chart = () => {
     switch (tag) {
       case 'eth':
         setCurrencyTag(eth);
+        setAverageScore(calculScore(eth));
         break;
       case 'ltc':
         setCurrencyTag(ltc);
+        setAverageScore(calculScore(ltc));
+
         break;
       case 'xrp':
         setCurrencyTag(xrp);
+        setAverageScore(calculScore(xrp));
+
         break;
       default:
         setCurrencyTag(eth);
+        setAverageScore(calculScore(eth));
     }
   };
+
   useEffect(
     () => { },
     [currencyTag],
