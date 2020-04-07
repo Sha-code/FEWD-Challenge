@@ -1,4 +1,4 @@
-import React, { PureComponent, useState, useEffect } from 'react';
+import React, { useLayoutEffect, useState, useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import {
   ScatterChart, Scatter, ZAxis, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -13,6 +13,7 @@ import xrp from 'src/data/xrp.json';
 const Chart = () => {
   const [currencyTag, setCurrencyTag] = useState(eth);
   const [currencyName, setCurrencyName] = useState('Ethereum');
+  const [size, setSize] = useState(window.innerWidth);
 
   const selectedCurrency = (e) => {
     const currency = e.target.value.split('-');
@@ -36,12 +37,30 @@ const Chart = () => {
     () => { },
     [currencyTag],
   );
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize(window.innerWidth);
+    }
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
   return (
     <div>
-      <ScatterChart width={1200} height={600} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+      <ScatterChart
+        width={(size - 50)}
+        height={(size / 2)}
+        margin={{
+          top: 20,
+          right: 20,
+          bottom: 20,
+          left: 20,
+        }}
+      >
         <XAxis type="number" dataKey="score" name="Google trend score" unit="" />
         <CartesianGrid />
-        <ZAxis type="number" dataKey="ratio" name="Low/Hight Ratio" range={[60, 300]} unit="" />
+        <ZAxis type="number" dataKey="ratio" name="Low/Hight Ratio" range={[size / 200, size / 8]} unit="" />
         <YAxis yAxisId="left" type="number" dataKey="price" name="Price" unit="USD" stroke="#8884d8" />
         <YAxis yAxisId="right" type="number" dataKey="price" name="Price" unit="USD" orientation="right" stroke="#82ca9d" />
         <Tooltip cursor={{ strokeDasharray: '3 3' }} />
